@@ -158,13 +158,21 @@ func generate_life() -> Dictionary:
 	if purchased_upgrades.has("luck_boost"):
 		luck_bonus = purchased_upgrades["luck_boost"] * 20.0
 		
+	# Select a dominant stat category to specialize the character
+	var stats = ["richesse", "intelligence", "chance", "geographie", "beaute"]
+	var dominant = stats[randi() % stats.size()]
+	
 	var life = {
-		"richesse": randf_range(0, 100) + base_bonus,
-		"intelligence": randf_range(0, 100) + base_bonus,
-		"chance": randf_range(0, 100) + base_bonus + luck_bonus,
-		"geographie": randf_range(0, 100) + base_bonus,
-		"beaute": randf_range(0, 100) + base_bonus
+		"richesse": randf_range(5.0, 45.0) + base_bonus,
+		"intelligence": randf_range(5.0, 45.0) + base_bonus,
+		"chance": randf_range(5.0, 45.0) + base_bonus + luck_bonus,
+		"geographie": randf_range(5.0, 45.0) + base_bonus,
+		"beaute": randf_range(5.0, 45.0) + base_bonus
 	}
+	
+	# Give the dominant stat a powerful specialized boost
+	life[dominant] += randf_range(45.0, 75.0)
+	
 	lives.append(life)
 	return life
 

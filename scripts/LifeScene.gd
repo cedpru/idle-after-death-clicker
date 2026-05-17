@@ -1,14 +1,76 @@
 extends Control
 
+@onready var background = $Background
 @onready var stats_container = $MarginContainer/VBoxContainer/StatsContainer
 @onready var end_life_button = $MarginContainer/VBoxContainer/EndLifeButton
 @onready var avatar_label = $MarginContainer/VBoxContainer/AvatarLabel
+@onready var title_label = $MarginContainer/VBoxContainer/TitleLabel
+@onready var desc_label = $MarginContainer/VBoxContainer/DescLabel
 
 func _ready():
 	end_life_button.pressed.connect(_on_end_life_pressed)
 	end_life_button.modulate.a = 0
 	avatar_label.modulate.a = 0
+	desc_label.modulate.a = 0
 	
+	# Configure Background Anchor/Pivot
+	background.pivot_offset = Vector2(189, 336)
+	
+	# Create Glassmorphic card styling dynamically to ensure 100% contrast and readability
+	var card_panel = PanelContainer.new()
+	var style = StyleBoxFlat.new()
+	style.bg_color = Color(0.06, 0.06, 0.12, 0.85) # High opacity transluscent dark purple card
+	style.border_width_left = 2
+	style.border_width_right = 2
+	style.border_width_top = 2
+	style.border_width_bottom = 4
+	style.border_color = Color("#8338ec") # Vibrant neon purple border
+	style.corner_radius_top_left = 18
+	style.corner_radius_top_right = 18
+	style.corner_radius_bottom_left = 18
+	style.corner_radius_bottom_right = 18
+	style.content_margin_left = 15
+	style.content_margin_right = 15
+	style.content_margin_top = 20
+	style.content_margin_bottom = 20
+	card_panel.add_theme_stylebox_override("panel", style)
+	
+	# Reparent VBoxContainer inside the gorgeous new Glassmorphic Panel
+	var vbox = $MarginContainer/VBoxContainer
+	$MarginContainer.remove_child(vbox)
+	$MarginContainer.add_child(card_panel)
+	card_panel.add_child(vbox)
+	
+	# Style Labels for ultimate legibility
+	title_label.add_theme_color_override("font_color", Color.WHITE)
+	title_label.add_theme_font_size_override("font_size", 24)
+	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	desc_label.add_theme_color_override("font_color", Color("#cbd5e1")) # Silver gray
+	desc_label.add_theme_font_size_override("font_size", 13)
+	desc_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	
+	# Style Return/Rebirth Button
+	var btn_style = StyleBoxFlat.new()
+	btn_style.bg_color = Color("#ef233c") # High-energy glowing crimson
+	btn_style.corner_radius_top_left = 12
+	btn_style.corner_radius_top_right = 12
+	btn_style.corner_radius_bottom_left = 12
+	btn_style.corner_radius_bottom_right = 12
+	end_life_button.add_theme_stylebox_override("normal", btn_style)
+	
+	var btn_style_hover = btn_style.duplicate()
+	btn_style_hover.bg_color = Color("#d90429")
+	end_life_button.add_theme_stylebox_override("hover", btn_style_hover)
+	
+	var btn_style_pressed = btn_style.duplicate()
+	btn_style_pressed.bg_color = Color("#b3001e")
+	end_life_button.add_theme_stylebox_override("pressed", btn_style_pressed)
+	
+	end_life_button.add_theme_color_override("font_color", Color.WHITE)
+	end_life_button.add_theme_font_size_override("font_size", 16)
+	
+	# DYNAMIC PROCEDURAL LIFETIME SELECTION & BACKGROUND MATCHING
 	if Global.lives.size() > 0:
 		var current_life = Global.lives[-1]
 		
@@ -18,10 +80,8 @@ func _ready():
 			if current_life[stat] > max_val:
 				max_val = current_life[stat]
 				best_stat = stat
-				
-		var desc_label = $MarginContainer/VBoxContainer/DescLabel
-		desc_label.modulate.a = 0
 		
+		# Set avatar visual dynamically based on stats
 		if max_val < 30:
 			avatar_label.text = "🧑‍🌾"
 			desc_label.text = _get_random_phrase("pauvre")
@@ -41,23 +101,44 @@ func _ready():
 			elif best_stat == "beaute": 
 				avatar_label.text = "🧝"
 				desc_label.text = _get_random_phrase("beaute")
+		
+		# DYNAMIC THEMED BACKGROUND ASSIGNMENT
+		var bg_path = "res://assets/life_background.jpg" # Default sunset city
+		if max_val >= 30:
+			if best_stat == "richesse":
+				bg_path = "res://assets/life_background_rich.jpg"
+			elif best_stat == "intelligence":
+				bg_path = "res://assets/life_background_smart.jpg"
+			elif best_stat == "beaute":
+				bg_path = "res://assets/life_background_beauty.jpg"
+		
+		if FileAccess.file_exists(bg_path):
+			background.texture = load(bg_path)
 			
 		# Animate avatar and desc
-		avatar_label.scale = Vector2(0.5, 0.5)
+		avatar_label.scale = Vector2(0.3, 0.3)
 		avatar_label.pivot_offset = Vector2(avatar_label.size.x / 2.0, avatar_label.size.y / 2.0)
+		
 		var t_avatar = get_tree().create_tween().set_parallel(true)
-		t_avatar.tween_property(avatar_label, "modulate:a", 1.0, 0.5)
-		t_avatar.tween_property(avatar_label, "scale", Vector2(1, 1), 0.5).set_trans(Tween.TRANS_BOUNCE)
-		t_avatar.tween_property(desc_label, "modulate:a", 1.0, 0.5).set_delay(0.2)
+		t_avatar.tween_property(avatar_label, "modulate:a", 1.0, 0.4)
+		t_avatar.tween_property(avatar_label, "scale", Vector2(1, 1), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		t_avatar.tween_property(desc_label, "modulate:a", 1.0, 0.4).set_delay(0.1)
 		
-		display_stat("Richesse", current_life["richesse"], 0.4)
-		display_stat("Intelligence", current_life["intelligence"], 0.7)
-		display_stat("Chance", current_life["chance"], 1.0)
-		display_stat("Géographie", current_life["geographie"], 1.3)
-		display_stat("Beauté", current_life["beaute"], 1.6)
+		# Snappy stats list reveals to avoid user waiting
+		display_stat("💰 Richesse", current_life["richesse"], 0.1)
+		display_stat("🧠 Intelligence", current_life["intelligence"], 0.2)
+		display_stat("🍀 Chance", current_life["chance"], 0.3)
+		display_stat("🗺️ Géographie", current_life["geographie"], 0.4)
+		display_stat("✨ Beauté", current_life["beaute"], 0.5)
 		
+		# Reveal action button quickly
 		var tween = get_tree().create_tween()
-		tween.tween_property(end_life_button, "modulate:a", 1.0, 0.8).set_delay(2.2)
+		tween.tween_property(end_life_button, "modulate:a", 1.0, 0.4).set_delay(0.6)
+
+func _process(_delta: float):
+	# Gentle slow breathing animation to make the background feel alive and cosmic
+	var time = Time.get_ticks_msec() / 1000.0
+	background.scale = Vector2(1.03 + sin(time * 0.2) * 0.03, 1.03 + sin(time * 0.2) * 0.03)
 
 func _get_random_phrase(category: String) -> String:
 	var phrases = {
@@ -100,9 +181,9 @@ func _get_random_phrase(category: String) -> String:
 
 func display_stat(stat_name: String, value: float, delay: float):
 	var label = Label.new()
-	label.add_theme_color_override("font_color", Color(0.1, 0.1, 0.1))
-	label.add_theme_font_size_override("font_size", 24)
-	label.text = stat_name + " : " + str(floor(value))
+	label.add_theme_color_override("font_color", Color("#f8f9fa")) # Bright readable off-white
+	label.add_theme_font_size_override("font_size", 16)
+	label.text = stat_name + " : " + str(floor(value)) + " %"
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	
 	# Prepare for animation
@@ -112,12 +193,12 @@ func display_stat(stat_name: String, value: float, delay: float):
 	# Add slight vertical offset after it's in the tree to slide it
 	await get_tree().process_frame
 	var original_y = label.position.y
-	label.position.y += 20
+	label.position.y += 12
 	
 	var tween = get_tree().create_tween().set_parallel(true)
-	tween.tween_property(label, "modulate:a", 1.0, 0.5).set_delay(delay).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tween.tween_property(label, "position:y", original_y, 0.5).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "modulate:a", 1.0, 0.3).set_delay(delay).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "position:y", original_y, 0.3).set_delay(delay).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func _on_end_life_pressed():
-	# Transition back to DeathScene
+	Global.play_sfx("buy")
 	get_tree().change_scene_to_file("res://scenes/DeathScene.tscn")
