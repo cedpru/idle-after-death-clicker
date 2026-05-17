@@ -32,6 +32,4 @@
 
 ## 🚀 Current Status & Next Steps (TODO)
 - **Status**: The core MVP loop (Death -> Upgrade -> Rebirth -> Death) is fully functional, styled, and balanced.
-- **Next Step 1 - Ascension Screen**: The `AscensionScene.tscn` needs to be finalized. It should trigger when `Global.cycles >= 10`. It must sum up all stats from `Global.lives`, add a bonus based on `Global.total_essence`, calculate a final "Rank" (e.g., Ame Perdue, Dieu), increase `Global.ascension_multiplier`, call `Global.reset_for_ascension()`, and restart the game loop.
-- **Next Step 2 - Audio**: `sfx_enabled` and `music_enabled` variables exist in `Global.gd` and the Settings UI, but no `AudioStreamPlayer` nodes or actual sound files have been integrated yet.
-- **Next Step 3 - Life Events (Optional)**: Implement random text events that pop up during the "Death" phase based on the active life to grant sudden bonuses.
+- **Roadmap**: See [ROADMAP.md](./ROADMAP.md) for the detailed step-by-step dopamine/juiciness polish plan. Currently working on Step 1.

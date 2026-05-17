@@ -101,6 +101,12 @@ func setup_theme():
 	autosave_timer.autostart = true
 	autosave_timer.timeout.connect(save_game)
 	add_child(autosave_timer)
+	
+	music_timer = Timer.new()
+	music_timer.wait_time = 1.5
+	music_timer.autostart = true
+	music_timer.timeout.connect(_on_music_timer_timeout)
+	add_child(music_timer)
 
 func get_current_life() -> Dictionary:
 	if lives.size() > 0:
@@ -115,9 +121,10 @@ func _on_idle_timer_timeout():
 			amount *= (1.0 + life["intelligence"] / 100.0)
 		add_essence(amount)
 
-func get_click_value() -> float:
+func get_click_value() -> Dictionary:
 	var base_val = 1.0 * click_multiplier
 	var life = get_current_life()
+	var is_crit = false
 	
 	if life.has("geographie"):
 		base_val *= (1.0 + life["geographie"] / 100.0)
@@ -125,9 +132,9 @@ func get_click_value() -> float:
 	if life.has("chance"):
 		if randf() < (life["chance"] / 100.0) * 0.5: # 50% chance at 100 Luck
 			base_val *= 5.0 # Critical Hit
-			print("Coup critique chanceux ! (x5)")
+			is_crit = true
 			
-	return base_val
+	return {"value": base_val, "critical": is_crit}
 
 func add_essence(amount: float):
 	essence += amount
@@ -139,6 +146,7 @@ func check_death_level():
 	var required = 100 * pow(death_level, 2)
 	if total_essence >= required:
 		death_level += 1
+		play_sfx("levelup")
 		print("Death Level Up! Now level ", death_level)
 
 func generate_life() -> Dictionary:
@@ -194,6 +202,7 @@ func purchase_upgrade(upgrade_id: String):
 		essence -= cost
 		purchased_upgrades[upgrade_id] = current_level + 1
 		apply_upgrade_effect(upgrade_id)
+		play_sfx("buy")
 		save_game()
 
 var sfx_enabled: bool = true
@@ -257,7 +266,6 @@ func load_game():
 var ascension_multiplier: float = 1.0
 
 func reset_for_ascension():
-	ascension_multiplier += 0.5 # 50% permanent bonus per ascension
 	essence = 0.0
 	total_essence = 0.0
 	click_multiplier = 1.0 * ascension_multiplier
@@ -267,3 +275,83 @@ func reset_for_ascension():
 	lives.clear()
 	purchased_upgrades.clear()
 	save_game()
+
+# --- AUDIO SYSTEM (PROCEDURAL RETRO SYNTH & MUSIC) ---
+var music_timer: Timer
+var current_ambient_freq: float = 220.0
+var music_notes = [220.0, 246.94, 261.63, 293.66, 329.63, 392.00, 440.00] # A minor / C major pentatonic scale notes
+
+func _on_music_timer_timeout():
+	if not music_enabled:
+		return
+	# 30% chance to play a soft, random chord tone in the background
+	if randf() < 0.4:
+		current_ambient_freq = music_notes[randi() % music_notes.size()]
+		play_sfx("music_note")
+
+func play_sfx(type: String):
+	if type == "music_note" and not music_enabled:
+		return
+	if type != "music_note" and not sfx_enabled:
+		return
+		
+	var player = AudioStreamPlayer.new()
+	add_child(player)
+	player.finished.connect(player.queue_free)
+	
+	var stream = _generate_sfx_stream(type)
+	if stream:
+		player.stream = stream
+		player.play()
+
+func _generate_sfx_stream(type: String) -> AudioStreamWAV:
+	var wav = AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_16_BITS
+	wav.mix_rate = 22050
+	wav.stereo = false
+	
+	var duration = 0.12
+	if type == "buy": duration = 0.25
+	elif type == "levelup": duration = 0.5
+	elif type == "music_note": duration = 1.2
+	
+	var num_samples = int(22050 * duration)
+	var bytes = PackedByteArray()
+	bytes.resize(num_samples * 2)
+	
+	var phase = 0.0
+	for i in range(num_samples):
+		var t = float(i) / num_samples
+		var freq = 440.0
+		
+		if type == "click":
+			freq = 700.0 - (300.0 * t) # Quick frequency slide down
+		elif type == "crit":
+			freq = 600.0 + (800.0 * t) # Higher slide up
+		elif type == "buy":
+			if t < 0.5:
+				freq = 523.25 # C5
+			else:
+				freq = 659.25 # E5
+		elif type == "levelup":
+			if t < 0.25: freq = 261.63 # C4
+			elif t < 0.5: freq = 329.63 # E4
+			elif t < 0.75: freq = 392.00 # G4
+			else: freq = 523.25 # C5
+		elif type == "music_note":
+			freq = current_ambient_freq
+			
+		phase += 2.0 * PI * freq / 22050.0
+		var sample = int(sin(phase) * 8000.0) # Medium soft amplitude
+		
+		# Envelope fade/decay
+		var env = 1.0 - t
+		if type == "music_note":
+			# Slow warm fade-in and soft decay for ambient background notes
+			env = sin(t * PI) * 0.08 # Max 8% amplitude to make it very quiet and soft
+		sample = int(sample * env)
+		
+		bytes.encode_s16(i * 2, sample)
+		
+	wav.data = bytes
+	return wav

@@ -18,7 +18,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(1, 0.95, 0.8, 1)
+color = Color(0.08, 0.08, 0.12, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -45,14 +45,14 @@ horizontal_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_colors/font_color = Color(0.9, 0.9, 1.0, 1)
 theme_override_font_sizes/font_size = 28
 text = "Score Total : 0"
 horizontal_alignment = 1
 
 [node name="RankLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.4, 0.1, 1)
+theme_override_colors/font_color = Color(1.0, 0.84, 0.0, 1)
 theme_override_font_sizes/font_size = 36
 text = "Rang : Fantôme"
 horizontal_alignment = 1
