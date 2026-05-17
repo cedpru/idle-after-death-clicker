@@ -294,10 +294,21 @@ func update_ui():
 		
 	rebirth_cost = floor(rebirth_cost)
 	
+	# Compute total purchased upgrades for Ascension progression gate
+	var total_upgrades = 0
+	for up_id in Global.purchased_upgrades:
+		total_upgrades += Global.purchased_upgrades[up_id]
+		
 	if Global.cycles >= 10:
-		rebirth_button.text = "Ascension Finale !"
-		rebirth_button.disabled = false
-		rebirth_button.add_theme_color_override("font_color", Color(1, 0.84, 0)) # Gold
+		if total_upgrades >= 15:
+			rebirth_button.text = "✨ ASCENSION FINALE ! ✨"
+			rebirth_button.disabled = false
+			rebirth_button.add_theme_color_override("font_color", Color(1, 0.84, 0)) # Gold
+		else:
+			rebirth_button.text = "🔒 Ascension (Requis: 15 Amél., Actuel: " + str(total_upgrades) + ")"
+			rebirth_button.disabled = true
+			# Dark gray text style for lock
+			#rebirth_button.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
 	else:
 		rebirth_button.text = "Renaissance (Coût: " + str(floor(rebirth_cost)) + ")"
 		rebirth_button.disabled = Global.essence < rebirth_cost
@@ -307,8 +318,13 @@ func _on_upgrade_pressed(upgrade_id: String):
 	update_ui()
 
 func _on_rebirth_pressed():
+	var total_upgrades = 0
+	for up_id in Global.purchased_upgrades:
+		total_upgrades += Global.purchased_upgrades[up_id]
+		
 	if Global.cycles >= 10:
-		get_tree().change_scene_to_file("res://scenes/AscensionScene.tscn")
+		if total_upgrades >= 15:
+			get_tree().change_scene_to_file("res://scenes/AscensionScene.tscn")
 	elif Global.essence >= rebirth_cost:
 		Global.essence -= rebirth_cost
 		Global.rebirth()
