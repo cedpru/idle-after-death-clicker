@@ -1,0 +1,74 @@
+[gd_scene load_steps=3 format=3 uid="uid://dqx8y4k5n2j8q"]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_0abcd"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_abcd1234"]
+bg_color = Color(0.2, 0.2, 0.3, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_left = 20
+corner_radius_bottom_right = 20
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0abcd")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -400.0
+offset_right = 200.0
+offset_bottom = 400.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+
+[node name="CurrencyLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Coins: 0"
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+
+[node name="ClicksLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Clicks: 0"
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+
+[node name="ClickButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 300)
+theme_override_font_sizes/font_size = 64
+text = "CLICK!"
+theme_override_styles/normal = SubResource("StyleBoxFlat_abcd1234")
+
+[node name="PerSecondLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Per Second: 0"
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+
+[node name="UpgradesButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(250, 60)
+theme_override_font_sizes/font_size = 32
+text = "Upgrades"

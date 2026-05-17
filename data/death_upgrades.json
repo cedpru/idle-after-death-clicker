@@ -1,0 +1,74 @@
+[
+    {
+        "id": "click_power",
+        "name": "Puissance du Clic",
+        "description": "Augmente l'essence générée par clic de 20%.",
+        "base_cost": 10,
+        "cost_multiplier": 1.5,
+        "max_level": 50,
+        "required_death_level": 1
+    },
+    {
+        "id": "idle_generation",
+        "name": "Génération Automatique",
+        "description": "Génère 1 essence par seconde automatiquement.",
+        "base_cost": 50,
+        "cost_multiplier": 1.8,
+        "max_level": 50,
+        "required_death_level": 2
+    },
+    {
+        "id": "starting_stats",
+        "name": "Bénédiction de Renaissance",
+        "description": "Augmente les statistiques de base de la prochaine vie de 5 points.",
+        "base_cost": 200,
+        "cost_multiplier": 2.0,
+        "max_level": 20,
+        "required_death_level": 3
+    },
+    {
+        "id": "click_frenzy",
+        "name": "Frénésie de la Faux",
+        "description": "Double totalement la puissance de votre clic !",
+        "base_cost": 1500,
+        "cost_multiplier": 3.0,
+        "max_level": 5,
+        "required_death_level": 4
+    },
+    {
+        "id": "idle_multiplier",
+        "name": "Faille Temporelle",
+        "description": "Augmente la vitesse du temps : +20% d'Essence auto par seconde.",
+        "base_cost": 3000,
+        "cost_multiplier": 2.5,
+        "max_level": 10,
+        "required_death_level": 5
+    },
+    {
+        "id": "luck_boost",
+        "name": "Manipulateur de Destin",
+        "description": "Ajoute un bonus énorme de +20 spécifiquement à votre stat de Chance à la naissance.",
+        "base_cost": 10000,
+        "cost_multiplier": 4.0,
+        "max_level": 5,
+        "required_death_level": 6
+    },
+    {
+        "id": "cost_reduction",
+        "name": "Sagesse Millénaire",
+        "description": "Réduit le coût des autres améliorations de 5%.",
+        "base_cost": 25000,
+        "cost_multiplier": 5.0,
+        "max_level": 10,
+        "required_death_level": 7
+    },
+    {
+        "id": "ascension_prep",
+        "name": "Aura Céleste",
+        "description": "Réduit le coût de la Renaissance de 10%. Préparez-vous à l'Ascension.",
+        "base_cost": 100000,
+        "cost_multiplier": 10.0,
+        "max_level": 5,
+        "required_death_level": 8
+    }
+]
