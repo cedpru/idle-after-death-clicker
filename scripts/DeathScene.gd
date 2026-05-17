@@ -52,6 +52,30 @@ func _ready():
 	$SettingsPanel/CenterContainer/VBoxContainer.add_child(debug_event_btn)
 	$SettingsPanel/CenterContainer/VBoxContainer.move_child(debug_event_btn, $SettingsPanel/CenterContainer/VBoxContainer.get_child_count() - 2)
 	
+	# Dynamic Hard Reset button inside Settings Panel (Crimson Red Warning)
+	var reset_btn = Button.new()
+	reset_btn.text = "⚠️ EFFACER LA SAUVEGARDE ⚠️"
+	reset_btn.custom_minimum_size = Vector2(0, 48)
+	var reset_style = StyleBoxFlat.new()
+	reset_style.bg_color = Color("#d90429") # Severe Crimson warning color
+	reset_style.corner_radius_top_left = 12
+	reset_style.corner_radius_top_right = 12
+	reset_style.corner_radius_bottom_left = 12
+	reset_style.corner_radius_bottom_right = 12
+	reset_btn.add_theme_stylebox_override("normal", reset_style)
+	
+	var reset_style_hover = reset_style.duplicate()
+	reset_style_hover.bg_color = Color("#ef233c")
+	reset_btn.add_theme_stylebox_override("hover", reset_style_hover)
+	
+	reset_btn.pressed.connect(func():
+		Global.play_sfx("crit")
+		Global.hard_reset()
+		get_tree().reload_current_scene()
+	)
+	$SettingsPanel/CenterContainer/VBoxContainer.add_child(reset_btn)
+	$SettingsPanel/CenterContainer/VBoxContainer.move_child(reset_btn, $SettingsPanel/CenterContainer/VBoxContainer.get_child_count() - 2)
+	
 	# Load UI states
 	sfx_check.button_pressed = Global.sfx_enabled
 	music_check.button_pressed = Global.music_enabled

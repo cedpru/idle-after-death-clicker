@@ -290,6 +290,25 @@ func reset_for_ascension():
 	purchased_upgrades.clear()
 	save_game()
 
+func hard_reset():
+	ascension_multiplier = 1.0
+	essence = 0.0
+	total_essence = 0.0
+	click_multiplier = 1.0
+	idle_generation = 0.0
+	death_level = 1
+	cycles = 0
+	cycle_essence_harvested = 0.0
+	lives.clear()
+	purchased_upgrades.clear()
+	sfx_enabled = true
+	music_enabled = true
+	
+	if FileAccess.file_exists(save_path):
+		DirAccess.remove_absolute(save_path)
+		
+	save_game()
+
 # --- AUDIO SYSTEM (PROCEDURAL RETRO SYNTH & MUSIC) ---
 var music_timer: Timer
 var current_ambient_freq: float = 220.0
