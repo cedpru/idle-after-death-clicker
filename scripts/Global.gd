@@ -8,6 +8,7 @@ var idle_generation: float = 0.0 # Essence per second
 var death_level: int = 1
 var cycles: int = 0
 var lives: Array = []
+var cycle_essence_harvested: float = 0.0
 
 var upgrades_data: Array = []
 var purchased_upgrades: Dictionary = {} # e.g. {"upgrade_id": level}
@@ -139,6 +140,7 @@ func get_click_value() -> Dictionary:
 func add_essence(amount: float):
 	essence += amount
 	total_essence += amount
+	cycle_essence_harvested += amount
 	check_death_level()
 
 func check_death_level():
@@ -178,6 +180,7 @@ func generate_life() -> Dictionary:
 
 func rebirth():
 	cycles += 1
+	cycle_essence_harvested = 0.0
 	generate_life()
 	save_game()
 
@@ -239,7 +242,8 @@ func save_game():
 		"purchased_upgrades": purchased_upgrades,
 		"ascension_multiplier": ascension_multiplier,
 		"sfx_enabled": sfx_enabled,
-		"music_enabled": music_enabled
+		"music_enabled": music_enabled,
+		"cycle_essence_harvested": cycle_essence_harvested
 	}
 	
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
@@ -269,6 +273,7 @@ func load_game():
 			ascension_multiplier = data.get("ascension_multiplier", 1.0)
 			sfx_enabled = data.get("sfx_enabled", true)
 			music_enabled = data.get("music_enabled", true)
+			cycle_essence_harvested = data.get("cycle_essence_harvested", 0.0)
 		file.close()
 
 var ascension_multiplier: float = 1.0
@@ -280,6 +285,7 @@ func reset_for_ascension():
 	idle_generation = 0.0
 	death_level = 1
 	cycles = 0
+	cycle_essence_harvested = 0.0
 	lives.clear()
 	purchased_upgrades.clear()
 	save_game()

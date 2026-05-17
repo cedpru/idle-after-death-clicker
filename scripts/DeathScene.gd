@@ -310,8 +310,13 @@ func update_ui():
 			# Dark gray text style for lock
 			#rebirth_button.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
 	else:
-		rebirth_button.text = "Renaissance (Coût: " + str(floor(rebirth_cost)) + ")"
-		rebirth_button.disabled = Global.essence < rebirth_cost
+		var required_harvest = max(rebirth_cost * 0.4, 150.0)
+		if Global.cycle_essence_harvested < required_harvest:
+			rebirth_button.text = "🔒 Récolte: " + str(floor(Global.cycle_essence_harvested)) + "/" + str(floor(required_harvest)) + " 💀"
+			rebirth_button.disabled = true
+		else:
+			rebirth_button.text = "Renaissance (Coût: " + str(floor(rebirth_cost)) + ")"
+			rebirth_button.disabled = Global.essence < rebirth_cost
 
 func _on_upgrade_pressed(upgrade_id: String):
 	Global.purchase_upgrade(upgrade_id)
@@ -326,9 +331,11 @@ func _on_rebirth_pressed():
 		if total_upgrades >= 15:
 			get_tree().change_scene_to_file("res://scenes/AscensionScene.tscn")
 	elif Global.essence >= rebirth_cost:
-		Global.essence -= rebirth_cost
-		Global.rebirth()
-		get_tree().change_scene_to_file("res://scenes/LifeScene.tscn")
+		var required_harvest = max(rebirth_cost * 0.4, 150.0)
+		if Global.cycle_essence_harvested >= required_harvest:
+			Global.essence -= rebirth_cost
+			Global.rebirth()
+			get_tree().change_scene_to_file("res://scenes/LifeScene.tscn")
 
 func _on_settings_pressed():
 	settings_panel.visible = true
