@@ -63,3 +63,25 @@ Pour que le jeu dépasse le stade "amateur" et devienne visuellement digne d'un 
 - **Shader de Vignette** : Appliquer un shader de vignette sombre sur l'écran des morts pour focaliser le regard vers le centre et accentuer le côté mystique et oppressant.
 - **Chromatic Aberration (Distorsion)** : Activer un bref flash d'aberration chromatique et un effet d'explosion de particules lors d'un clic Critique ou du déclenchement d'un événement mystique.
 - **Glitch Effect** : Lors de la mort ou de la transition de Renaissance, appliquer un shader de distorsion/glitch analogique très court (0.2s) pour symboliser le transfert de l'âme à travers le vide.
+
+---
+
+## 🔮 ÉTAPE 7 : ÉVOLUTIONS FUTURES - DOPAMINE, STRATÉGIE & PANTHÉON (Pistes Suggérées)
+
+Pour continuer d'élever l'intérêt et la rejouabilité du jeu, voici les trois grands chantiers conceptuels proposés :
+
+### 🔲 1. ⚡ La "Tempête d'Âmes" (Mécanique Active Dopaminergique)
+- [ ] **Système de Rage** : Une jauge de fureur se remplit à chaque clic sur le bouton principal (ex: 40 clics nécessaires).
+- [ ] **Mode Rage Actif** : Cliquer sur le bouton déclenche une tempête mystique pendant 10 secondes :
+  - Tremblement d'écran continu doux (`screen shake`).
+  - Pluie automatique de particules dorées (`CPUParticles2D`).
+  - Multiplicateur de clic temporaire de **x5** et de passif de **x3**.
+
+### 🔲 2. ⚖️ Les "Choix de Destinée" (Interactivité & Planification)
+- [ ] **Renaissance Interactive** : Lors de l'écran de Renaissance, proposer deux parchemins de choix de vie cliquables.
+- [ ] **Orientations Statistiques** : Permettre au joueur de forcer un bonus massif contre un malus (ex: *L'Ascète 🧘 (+40 Intel, -15 Beauté)* ou *Le Courtisan 🎭 (+40 Beauté, -15 Richesse)*) pour orienter stratégiquement sa run vers une fin d'Ascension spécifique.
+
+### 🔲 3. 🏛️ Le "Panthéon des Âmes" (Hall of Fame & Collection)
+- [ ] **Codex des Incarnations** : Menu accessible retraçant les statistiques éternelles de la partie (clics totaux accumulés, niveau maximal atteint).
+- [ ] **Galerie des 6 Fins Uniques** : Une vitrine présentant les 6 fins célestes possibles (Ange, Démon, Mage, Souverain, Pionnier, Âme Équilibrée). Les fins déjà obtenues brillent dans leur couleur céleste respective, les autres restent grisées pour encourager la complétion.
+
