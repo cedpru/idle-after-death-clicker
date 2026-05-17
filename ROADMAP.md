@@ -23,6 +23,9 @@ Ce document trace les étapes pour transformer le prototype (MVP) en un jeu haut
 - [x] **Pop-up Glassmorphism** : L'événement glisse depuis le haut de l'écran avec une transition fluide d'amorti et affiche les récompenses calculées dynamiquement selon votre niveau de mort.
 - [x] **Outil de Debug** : Un bouton spécial de débogage rapide a été ajouté dans les options (Settings) pour tester les événements à la demande !
 
-## 🔲 Étape 5 : Les Graphismes Finaux — À COMMENCER
-- [ ] **Remplacement des Emojis** : Création et intégration d'icônes 2D réelles.
-- [ ] **Arrière-plans** : Illustrations pour la Vie, la Mort, et l'Ascension.
+## 🔲 Étape 5 : Les Graphismes Finaux — TERMINÉE (100% Fait)
+- [x] **Arrière-plans Célestes** : Génération et intégration d'arrière-plans thématiques HD personnalisés (`.jpg`) pour nos trois environnements principaux :
+  - *La Mort* (`death_background.jpg`) : Un néant cosmique sombre avec une nébuleuse violette mystique.
+  - *La Vie* (`life_background.jpg`) : Un horizon urbain vibrant sous un ciel de coucher de soleil coloré.
+  - *L'Ascension* (`ascension_background.jpg`) : Un temple divin doré orné d'une énergie céleste lumineuse.
+- [x] **Remplacement des Emojis de Fond** : Les émojis rudimentaires de fond de scène ont été remplacés par ces sublimes illustrations d'ambiance 2D professionnelles.

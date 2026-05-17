@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://b2m8y6l2v5h9c"]
 
 [ext_resource type="Script" path="res://scripts/LifeScene.gd" id="1_k9m5b"]
+[ext_resource type="Texture2D" path="res://assets/life_background.jpg" id="2_life_bg"]
 
 [node name="LifeScene" type="Control"]
 layout_mode = 3
@@ -11,14 +12,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_k9m5b")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.9, 0.9, 0.8, 1)
+texture = ExtResource("2_life_bg")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

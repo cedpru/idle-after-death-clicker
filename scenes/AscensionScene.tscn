@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=3 uid="uid://d1p9a7n4w6j1e"]
 
 [ext_resource type="Script" path="res://scripts/AscensionScene.gd" id="1_a2b3c"]
+[ext_resource type="Texture2D" path="res://assets/ascension_background.jpg" id="2_asc_bg"]
 
 [node name="AscensionScene" type="Control"]
 layout_mode = 3
@@ -11,14 +12,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_a2b3c")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.08, 0.08, 0.12, 1)
+texture = ExtResource("2_asc_bg")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
