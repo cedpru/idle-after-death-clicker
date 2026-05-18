@@ -54,7 +54,7 @@ func _ready():
 	
 	# Dynamic Hard Reset button inside Settings Panel (Crimson Red Warning)
 	var reset_btn = Button.new()
-	reset_btn.text = "⚠️ EFFACER LA SAUVEGARDE ⚠️"
+	reset_btn.text = "!!! EFFACER LA SAUVEGARDE !!!"
 	reset_btn.custom_minimum_size = Vector2(0, 48)
 	var reset_style = StyleBoxFlat.new()
 	reset_style.bg_color = Color("#d90429") # Severe Crimson warning color
@@ -219,9 +219,11 @@ func build_upgrades_ui():
 			
 		var panel = PanelContainer.new()
 		panel.custom_minimum_size = Vector2(0, 120)
+		panel.mouse_filter = Control.MOUSE_FILTER_PASS
 		
 		var hbox = HBoxContainer.new()
 		hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+		hbox.mouse_filter = Control.MOUSE_FILTER_PASS
 		panel.add_child(hbox)
 		
 		var label = RichTextLabel.new()
@@ -229,6 +231,7 @@ func build_upgrades_ui():
 		label.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		label.bbcode_enabled = true
 		label.scroll_active = false
+		label.mouse_filter = Control.MOUSE_FILTER_PASS
 		hbox.add_child(label)
 		
 		var button = Button.new()
@@ -281,19 +284,19 @@ func update_ui():
 			
 		cost = floor(cost)
 		
-		var icon = "💎"
-		if upgrade["id"] == "click_power": icon = "🖱️"
-		elif upgrade["id"] == "idle_generation": icon = "⏳"
-		elif upgrade["id"] == "starting_stats": icon = "✨"
-		elif upgrade["id"] == "click_frenzy": icon = "🔥"
-		elif upgrade["id"] == "idle_multiplier": icon = "🌀"
-		elif upgrade["id"] == "luck_boost": icon = "🎲"
-		elif upgrade["id"] == "cost_reduction": icon = "📜"
-		elif upgrade["id"] == "ascension_prep": icon = "👑"
+		var icon = "[💎]"
+		if upgrade["id"] == "click_power": icon = "[CLIC]"
+		elif upgrade["id"] == "idle_generation": icon = "[AUTO]"
+		elif upgrade["id"] == "starting_stats": icon = "[STATS]"
+		elif upgrade["id"] == "click_frenzy": icon = "[FUREUR]"
+		elif upgrade["id"] == "idle_multiplier": icon = "[PROD]"
+		elif upgrade["id"] == "luck_boost": icon = "[CHANCE]"
+		elif upgrade["id"] == "cost_reduction": icon = "[WISDOM]"
+		elif upgrade["id"] == "ascension_prep": icon = "[AURA]"
 		
 		var text = "[color=#9d4edd][b]" + icon + " " + upgrade["name"] + "[/b][/color] (Nv " + str(current_level) + "/" + str(upgrade["max_level"]) + ")\n"
 		text += "[color=#a0a0b0][font_size=16]" + upgrade["description"] + "[/font_size][/color]\n"
-		text += "[color=#ffb703][b]Coût: " + str(cost) + " 💀[/b][/color]"
+		text += "[color=#ffb703][b]Coût: " + str(cost) + " Essence[/b][/color]"
 		label.text = text
 		
 		if current_level >= upgrade["max_level"]:
@@ -325,18 +328,18 @@ func update_ui():
 		
 	if Global.cycles >= 10:
 		if total_upgrades >= 15:
-			rebirth_button.text = "✨ ASCENSION FINALE ! ✨"
+			rebirth_button.text = "ASCENSION FINALE !"
 			rebirth_button.disabled = false
 			rebirth_button.add_theme_color_override("font_color", Color(1, 0.84, 0)) # Gold
 		else:
-			rebirth_button.text = "🔒 Ascension (Requis: 15 Amél., Actuel: " + str(total_upgrades) + ")"
+			rebirth_button.text = "[Bloqué] Ascension (Requis: 15 Amél., Actuel: " + str(total_upgrades) + ")"
 			rebirth_button.disabled = true
 			# Dark gray text style for lock
 			#rebirth_button.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
 	else:
 		var required_harvest = max(rebirth_cost * 0.4, 150.0)
 		if Global.cycle_essence_harvested < required_harvest:
-			rebirth_button.text = "🔒 Récolte: " + str(floor(Global.cycle_essence_harvested)) + "/" + str(floor(required_harvest)) + " 💀"
+			rebirth_button.text = "[Requis] Récolte: " + str(floor(Global.cycle_essence_harvested)) + "/" + str(floor(required_harvest)) + " Essence"
 			rebirth_button.disabled = true
 		else:
 			rebirth_button.text = "Renaissance (Coût: " + str(floor(rebirth_cost)) + ")"

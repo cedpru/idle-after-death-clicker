@@ -26,6 +26,16 @@ func _ready():
 func setup_theme():
 	var theme = Theme.new()
 	
+	# Use system font for regular text, with NotoColorEmoji as fallback for emoji glyphs
+	var main_font = SystemFont.new()
+	main_font.font_names = PackedStringArray(["Segoe UI", "Arial", "Helvetica", "sans-serif"])
+	
+	var emoji_font = load("res://assets/fonts/NotoColorEmoji.ttf")
+	if emoji_font:
+		main_font.fallbacks = [emoji_font]
+	
+	theme.default_font = main_font
+
 	var btn_normal = StyleBoxFlat.new()
 	btn_normal.bg_color = Color("#2a2b38")
 	btn_normal.corner_radius_top_left = 16
@@ -104,7 +114,7 @@ func setup_theme():
 	add_child(autosave_timer)
 	
 	music_timer = Timer.new()
-	music_timer.wait_time = 1.5
+	music_timer.wait_time = 0.25
 	music_timer.autostart = true
 	music_timer.timeout.connect(_on_music_timer_timeout)
 	add_child(music_timer)
@@ -311,21 +321,48 @@ func hard_reset():
 
 # --- AUDIO SYSTEM (PROCEDURAL RETRO SYNTH & MUSIC) ---
 var music_timer: Timer
+var music_step: int = 0
+var current_chord_idx: int = 0
 var current_ambient_freq: float = 220.0
-var music_notes = [220.0, 246.94, 261.63, 293.66, 329.63, 392.00, 440.00] # A minor / C major pentatonic scale notes
+var current_bass_freq: float = 110.0
+
+# Gothic Retro Chords: A minor -> F major -> C major -> E minor
+var chords = [
+	[110.0, [220.0, 261.63, 329.63, 440.0]], # Am
+	[87.31, [174.61, 220.0, 261.63, 349.23]], # F
+	[130.81, [261.63, 329.63, 392.0, 523.25]], # C
+	[82.41, [164.81, 196.0, 246.94, 329.63]]  # Em
+]
 
 func _on_music_timer_timeout():
 	if not music_enabled:
 		return
-	# 30% chance to play a soft, random chord tone in the background
-	if randf() < 0.4:
-		current_ambient_freq = music_notes[randi() % music_notes.size()]
+	
+	var chord = chords[current_chord_idx]
+	var bass = chord[0]
+	var arp = chord[1]
+	
+	# Select arpeggiator note based on step
+	var note_idx = music_step % arp.size()
+	current_ambient_freq = arp[note_idx]
+	current_bass_freq = bass
+	
+	# Play a soft melody/arpeggio note every 2 steps
+	if music_step % 2 == 0:
 		play_sfx("music_note")
+		
+	# Play a deep warm bass note on step 0 and 8
+	if music_step == 0 or music_step == 8:
+		play_sfx("bass_note")
+		
+	music_step = (music_step + 1) % 16
+	if music_step == 0:
+		current_chord_idx = (current_chord_idx + 1) % chords.size()
 
 func play_sfx(type: String):
-	if type == "music_note" and not music_enabled:
+	if (type == "music_note" or type == "bass_note") and not music_enabled:
 		return
-	if type != "music_note" and not sfx_enabled:
+	if (type != "music_note" and type != "bass_note") and not sfx_enabled:
 		return
 		
 	var player = AudioStreamPlayer.new()
@@ -346,7 +383,8 @@ func _generate_sfx_stream(type: String) -> AudioStreamWAV:
 	var duration = 0.12
 	if type == "buy": duration = 0.25
 	elif type == "levelup": duration = 0.5
-	elif type == "music_note": duration = 1.2
+	elif type == "music_note": duration = 0.6
+	elif type == "bass_note": duration = 1.0
 	
 	var num_samples = int(22050 * duration)
 	var bytes = PackedByteArray()
@@ -373,6 +411,8 @@ func _generate_sfx_stream(type: String) -> AudioStreamWAV:
 			else: freq = 523.25 # C5
 		elif type == "music_note":
 			freq = current_ambient_freq
+		elif type == "bass_note":
+			freq = current_bass_freq
 			
 		phase += 2.0 * PI * freq / 22050.0
 		var sample = int(sin(phase) * 8000.0) # Medium soft amplitude
@@ -380,8 +420,11 @@ func _generate_sfx_stream(type: String) -> AudioStreamWAV:
 		# Envelope fade/decay
 		var env = 1.0 - t
 		if type == "music_note":
-			# Slow warm fade-in and soft decay for ambient background notes
-			env = sin(t * PI) * 0.08 # Max 8% amplitude to make it very quiet and soft
+			# Soft fade-out for arpeggio notes
+			env = sin(t * PI) * 0.06 # Very quiet to not overlap harshly
+		elif type == "bass_note":
+			# Warm deep bass decay
+			env = (1.0 - t) * 0.12 # Deep warm 12% max volume
 		sample = int(sample * env)
 		
 		bytes.encode_s16(i * 2, sample)

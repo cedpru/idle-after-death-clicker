@@ -11,6 +11,7 @@ func _ready():
 	end_life_button.pressed.connect(_on_end_life_pressed)
 	end_life_button.modulate.a = 0
 	avatar_label.modulate.a = 0
+	avatar_label.add_theme_font_size_override("font_size", 80)
 	desc_label.modulate.a = 0
 	
 	# Configure Background Anchor/Pivot
@@ -81,7 +82,7 @@ func _ready():
 				max_val = current_life[stat]
 				best_stat = stat
 		
-		# Set avatar visual dynamically based on stats
+		# Set avatar visual dynamically based on stats (Using full-color emojis supported natively via system font fallback)
 		if max_val < 30:
 			avatar_label.text = "🧑‍🌾"
 			desc_label.text = _get_random_phrase("pauvre")
