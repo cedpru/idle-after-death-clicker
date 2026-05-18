@@ -2,7 +2,6 @@
 !/.godot/extension_list.cfg
 !/.godot/global_script_class_cache.cfg
 *.translation
-export_presets.cfg
 .import/
 build/
 
