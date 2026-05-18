@@ -3,8 +3,8 @@
         "id": "click_power",
         "name": "Puissance du Clic",
         "description": "Augmente l'essence générée par clic de 20%.",
-        "base_cost": 10,
-        "cost_multiplier": 1.5,
+        "base_cost": 25,
+        "cost_multiplier": 1.6,
         "max_level": 50,
         "required_death_level": 1
     },
@@ -12,8 +12,8 @@
         "id": "idle_generation",
         "name": "Génération Automatique",
         "description": "Génère 1 essence par seconde automatiquement.",
-        "base_cost": 50,
-        "cost_multiplier": 1.8,
+        "base_cost": 100,
+        "cost_multiplier": 1.9,
         "max_level": 50,
         "required_death_level": 2
     },
@@ -21,8 +21,8 @@
         "id": "starting_stats",
         "name": "Bénédiction de Renaissance",
         "description": "Augmente les statistiques de base de la prochaine vie de 5 points.",
-        "base_cost": 200,
-        "cost_multiplier": 2.0,
+        "base_cost": 250,
+        "cost_multiplier": 2.1,
         "max_level": 20,
         "required_death_level": 3
     },
@@ -30,7 +30,7 @@
         "id": "click_frenzy",
         "name": "Frénésie de la Faux",
         "description": "Double totalement la puissance de votre clic !",
-        "base_cost": 1500,
+        "base_cost": 1200,
         "cost_multiplier": 3.0,
         "max_level": 5,
         "required_death_level": 4
@@ -39,7 +39,7 @@
         "id": "idle_multiplier",
         "name": "Faille Temporelle",
         "description": "Augmente la vitesse du temps : +20% d'Essence auto par seconde.",
-        "base_cost": 3000,
+        "base_cost": 2500,
         "cost_multiplier": 2.5,
         "max_level": 10,
         "required_death_level": 5

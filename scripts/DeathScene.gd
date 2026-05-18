@@ -309,7 +309,7 @@ func update_ui():
 		index += 1
 		
 	# Update rebirth button
-	rebirth_cost = 150 * pow(1.7, Global.cycles)
+	rebirth_cost = 250 * pow(1.6, Global.cycles)
 	if current_life.has("beaute"):
 		var discount = clamp(current_life["beaute"] / 500.0, 0.0, 0.8) # max 80% discount
 		rebirth_cost *= (1.0 - discount)

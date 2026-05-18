@@ -135,7 +135,7 @@ func _on_idle_timer_timeout():
 		var total_stats = 0.0
 		for key in ["richesse", "intelligence", "chance", "geographie", "beaute"]:
 			total_stats += life.get(key, 0.0)
-		var stat_multiplier = 1.0 + (total_stats / 100.0)
+		var stat_multiplier = 1.0 + (total_stats / 250.0)
 		amount *= stat_multiplier
 		
 		add_essence(amount)
@@ -157,7 +157,7 @@ func get_click_value() -> Dictionary:
 	var total_stats = 0.0
 	for key in ["richesse", "intelligence", "chance", "geographie", "beaute"]:
 		total_stats += life.get(key, 0.0)
-	var stat_multiplier = 1.0 + (total_stats / 100.0)
+	var stat_multiplier = 1.0 + (total_stats / 250.0)
 	base_val *= stat_multiplier
 			
 	return {"value": base_val, "critical": is_crit}
@@ -189,16 +189,22 @@ func generate_life() -> Dictionary:
 	var stats = ["richesse", "intelligence", "chance", "geographie", "beaute"]
 	var dominant = stats[randi() % stats.size()]
 	
+	# Baseline stats start modest and scale beautifully with cycles and upgrades
+	var min_base = 2.0 + cycles * 1.0
+	var max_base = 15.0 + cycles * 1.5
+	
 	var life = {
-		"richesse": randf_range(5.0, 45.0) + base_bonus,
-		"intelligence": randf_range(5.0, 45.0) + base_bonus,
-		"chance": randf_range(5.0, 45.0) + base_bonus + luck_bonus,
-		"geographie": randf_range(5.0, 45.0) + base_bonus,
-		"beaute": randf_range(5.0, 45.0) + base_bonus
+		"richesse": randf_range(min_base, max_base) + base_bonus,
+		"intelligence": randf_range(min_base, max_base) + base_bonus,
+		"chance": randf_range(min_base, max_base) + base_bonus + luck_bonus,
+		"geographie": randf_range(min_base, max_base) + base_bonus,
+		"beaute": randf_range(min_base, max_base) + base_bonus
 	}
 	
-	# Give the dominant stat a powerful specialized boost
-	life[dominant] += randf_range(45.0, 75.0)
+	# Give the dominant stat a specialized boost that scales with cycles
+	var dom_min = 15.0 + cycles * 2.0
+	var dom_max = 35.0 + cycles * 3.5
+	life[dominant] += randf_range(dom_min, dom_max)
 	
 	lives.append(life)
 	return life
