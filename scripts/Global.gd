@@ -9,6 +9,8 @@ var death_level: int = 1
 var cycles: int = 0
 var lives: Array = []
 var cycle_essence_harvested: float = 0.0
+var karmic_bonus_stats: float = 0.0
+var karmic_essence_mult: float = 1.0
 
 var upgrades_data: Array = []
 var purchased_upgrades: Dictionary = {} # e.g. {"upgrade_id": level}
@@ -137,6 +139,7 @@ func _on_idle_timer_timeout():
 			total_stats += life.get(key, 0.0)
 		var stat_multiplier = 1.0 + (total_stats / 250.0)
 		amount *= stat_multiplier
+		amount *= karmic_essence_mult # Apply Karmic Blessing essence boost!
 		
 		add_essence(amount)
 
@@ -159,6 +162,7 @@ func get_click_value() -> Dictionary:
 		total_stats += life.get(key, 0.0)
 	var stat_multiplier = 1.0 + (total_stats / 250.0)
 	base_val *= stat_multiplier
+	base_val *= karmic_essence_mult # Apply Karmic Blessing essence boost!
 			
 	return {"value": base_val, "critical": is_crit}
 
@@ -194,17 +198,21 @@ func generate_life() -> Dictionary:
 	var max_base = 15.0 + cycles * 1.5
 	
 	var life = {
-		"richesse": randf_range(min_base, max_base) + base_bonus,
-		"intelligence": randf_range(min_base, max_base) + base_bonus,
-		"chance": randf_range(min_base, max_base) + base_bonus + luck_bonus,
-		"geographie": randf_range(min_base, max_base) + base_bonus,
-		"beaute": randf_range(min_base, max_base) + base_bonus
+		"richesse": randf_range(min_base, max_base) + base_bonus + karmic_bonus_stats,
+		"intelligence": randf_range(min_base, max_base) + base_bonus + karmic_bonus_stats,
+		"chance": randf_range(min_base, max_base) + base_bonus + luck_bonus + karmic_bonus_stats,
+		"geographie": randf_range(min_base, max_base) + base_bonus + karmic_bonus_stats,
+		"beaute": randf_range(min_base, max_base) + base_bonus + karmic_bonus_stats
 	}
 	
 	# Give the dominant stat a specialized boost that scales with cycles
 	var dom_min = 15.0 + cycles * 2.0
 	var dom_max = 35.0 + cycles * 3.5
 	life[dominant] += randf_range(dom_min, dom_max)
+	
+	# Reset Karmic Blessing after applying to the new life
+	karmic_bonus_stats = 0.0
+	karmic_essence_mult = 1.0
 	
 	lives.append(life)
 	return life
@@ -274,7 +282,9 @@ func save_game():
 		"ascension_multiplier": ascension_multiplier,
 		"sfx_enabled": sfx_enabled,
 		"music_enabled": music_enabled,
-		"cycle_essence_harvested": cycle_essence_harvested
+		"cycle_essence_harvested": cycle_essence_harvested,
+		"karmic_bonus_stats": karmic_bonus_stats,
+		"karmic_essence_mult": karmic_essence_mult
 	}
 	
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
@@ -305,6 +315,8 @@ func load_game():
 			sfx_enabled = data.get("sfx_enabled", true)
 			music_enabled = data.get("music_enabled", true)
 			cycle_essence_harvested = data.get("cycle_essence_harvested", 0.0)
+			karmic_bonus_stats = data.get("karmic_bonus_stats", 0.0)
+			karmic_essence_mult = data.get("karmic_essence_mult", 1.0)
 		file.close()
 
 var ascension_multiplier: float = 1.0
@@ -317,6 +329,8 @@ func reset_for_ascension():
 	death_level = 1
 	cycles = 0
 	cycle_essence_harvested = 0.0
+	karmic_bonus_stats = 0.0
+	karmic_essence_mult = 1.0
 	lives.clear()
 	purchased_upgrades.clear()
 	save_game()
@@ -328,6 +342,8 @@ func hard_reset():
 	click_multiplier = 1.0
 	idle_generation = 0.0
 	death_level = 1
+	karmic_bonus_stats = 0.0
+	karmic_essence_mult = 1.0
 	cycles = 0
 	cycle_essence_harvested = 0.0
 	lives.clear()

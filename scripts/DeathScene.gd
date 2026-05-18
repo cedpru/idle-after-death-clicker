@@ -364,6 +364,24 @@ func _on_rebirth_pressed():
 	elif Global.essence >= rebirth_cost:
 		var required_harvest = max(rebirth_cost * (0.8 + Global.cycles * 0.05), 300.0)
 		if Global.cycle_essence_harvested >= required_harvest:
+			# Calculate Karmic Blessing before rebirthing
+			var ratio = Global.cycle_essence_harvested / required_harvest
+			if ratio >= 10.0:
+				Global.karmic_bonus_stats = 50.0
+				Global.karmic_essence_mult = 2.0 # Double essence for the next life!
+				print("Reborn with GOLD KARMA (10x harvest requirement)!")
+			elif ratio >= 5.0:
+				Global.karmic_bonus_stats = 25.0
+				Global.karmic_essence_mult = 1.5 # +50% essence for the next life!
+				print("Reborn with SILVER KARMA (5x harvest requirement)!")
+			elif ratio >= 3.0:
+				Global.karmic_bonus_stats = 10.0
+				Global.karmic_essence_mult = 1.25 # +25% essence for the next life!
+				print("Reborn with BRONZE KARMA (3x harvest requirement)!")
+			else:
+				Global.karmic_bonus_stats = 0.0
+				Global.karmic_essence_mult = 1.0
+				
 			Global.essence -= rebirth_cost
 			Global.rebirth()
 			get_tree().change_scene_to_file("res://scenes/LifeScene.tscn")
