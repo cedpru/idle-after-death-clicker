@@ -309,7 +309,7 @@ func update_ui():
 		index += 1
 		
 	# Update rebirth button
-	rebirth_cost = 100 * pow(1.5, Global.cycles)
+	rebirth_cost = 150 * pow(1.7, Global.cycles)
 	if current_life.has("beaute"):
 		var discount = clamp(current_life["beaute"] / 500.0, 0.0, 0.8) # max 80% discount
 		rebirth_cost *= (1.0 - discount)
@@ -327,17 +327,20 @@ func update_ui():
 		total_upgrades += Global.purchased_upgrades[up_id]
 		
 	if Global.cycles >= 10:
-		if total_upgrades >= 15:
+		if total_upgrades >= 40 and prep_level >= 3:
 			rebirth_button.text = "ASCENSION FINALE !"
 			rebirth_button.disabled = false
 			rebirth_button.add_theme_color_override("font_color", Color(1, 0.84, 0)) # Gold
 		else:
-			rebirth_button.text = "[Bloqué] Ascension (Requis: 15 Amél., Actuel: " + str(total_upgrades) + ")"
+			var req_txt = ""
+			if total_upgrades < 40:
+				req_txt += "40 Amél. (" + str(total_upgrades) + "/40) "
+			if prep_level < 3:
+				req_txt += "Aura Nv 3 (" + str(prep_level) + "/3)"
+			rebirth_button.text = "[Bloqué] Ascension (Requis: " + req_txt + ")"
 			rebirth_button.disabled = true
-			# Dark gray text style for lock
-			#rebirth_button.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6))
 	else:
-		var required_harvest = max(rebirth_cost * 0.4, 150.0)
+		var required_harvest = max(rebirth_cost * 0.8, 250.0)
 		if Global.cycle_essence_harvested < required_harvest:
 			rebirth_button.text = "[Requis] Récolte: " + str(floor(Global.cycle_essence_harvested)) + "/" + str(floor(required_harvest)) + " Essence"
 			rebirth_button.disabled = true
@@ -353,12 +356,13 @@ func _on_rebirth_pressed():
 	var total_upgrades = 0
 	for up_id in Global.purchased_upgrades:
 		total_upgrades += Global.purchased_upgrades[up_id]
+	var prep_level = Global.purchased_upgrades.get("ascension_prep", 0)
 		
 	if Global.cycles >= 10:
-		if total_upgrades >= 15:
+		if total_upgrades >= 40 and prep_level >= 3:
 			get_tree().change_scene_to_file("res://scenes/AscensionScene.tscn")
 	elif Global.essence >= rebirth_cost:
-		var required_harvest = max(rebirth_cost * 0.4, 150.0)
+		var required_harvest = max(rebirth_cost * 0.8, 250.0)
 		if Global.cycle_essence_harvested >= required_harvest:
 			Global.essence -= rebirth_cost
 			Global.rebirth()

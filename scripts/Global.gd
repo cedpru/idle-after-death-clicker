@@ -130,6 +130,14 @@ func _on_idle_timer_timeout():
 		var life = get_current_life()
 		if life.has("intelligence"):
 			amount *= (1.0 + life["intelligence"] / 100.0)
+		
+		# Stat Multiplier: sum of all stats speeds up essence generation
+		var total_stats = 0.0
+		for key in ["richesse", "intelligence", "chance", "geographie", "beaute"]:
+			total_stats += life.get(key, 0.0)
+		var stat_multiplier = 1.0 + (total_stats / 100.0)
+		amount *= stat_multiplier
+		
 		add_essence(amount)
 
 func get_click_value() -> Dictionary:
@@ -144,6 +152,13 @@ func get_click_value() -> Dictionary:
 		if randf() < (life["chance"] / 100.0) * 0.5: # 50% chance at 100 Luck
 			base_val *= 5.0 # Critical Hit
 			is_crit = true
+			
+	# Stat Multiplier: sum of all stats speeds up click power
+	var total_stats = 0.0
+	for key in ["richesse", "intelligence", "chance", "geographie", "beaute"]:
+		total_stats += life.get(key, 0.0)
+	var stat_multiplier = 1.0 + (total_stats / 100.0)
+	base_val *= stat_multiplier
 			
 	return {"value": base_val, "critical": is_crit}
 
