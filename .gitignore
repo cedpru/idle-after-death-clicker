@@ -4,3 +4,5 @@
 *.translation
 export_presets.cfg
 .import/
+build/
+
