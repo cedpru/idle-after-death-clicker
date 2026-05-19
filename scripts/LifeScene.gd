@@ -112,6 +112,10 @@ func _ready():
 				bg_path = "res://assets/life_background_smart.jpg"
 			elif best_stat == "beaute":
 				bg_path = "res://assets/life_background_beauty.jpg"
+			elif best_stat == "chance":
+				bg_path = "res://assets/life_background_lucky.jpg"
+			elif best_stat == "geographie":
+				bg_path = "res://assets/life_background_geo.jpg"
 		
 		if FileAccess.file_exists(bg_path):
 			background.texture = load(bg_path)

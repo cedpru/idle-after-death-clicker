@@ -80,26 +80,44 @@ func _ready():
 	sfx_check.button_pressed = Global.sfx_enabled
 	music_check.button_pressed = Global.music_enabled
 	
-	# Design the main action buttons
-	var click_style = StyleBoxFlat.new()
-	click_style.bg_color = Color("#4361ee")
-	click_style.corner_radius_top_left = 20
-	click_style.corner_radius_top_right = 20
-	click_style.corner_radius_bottom_left = 20
-	click_style.corner_radius_bottom_right = 20
-	click_style.border_width_bottom = 8
-	click_style.border_color = Color("#3a0ca3")
-	click_button.add_theme_stylebox_override("normal", click_style)
-	
-	var click_hover = click_style.duplicate()
-	click_hover.bg_color = Color("#4cc9f0")
-	click_button.add_theme_stylebox_override("hover", click_hover)
-	
-	var click_pressed = click_style.duplicate()
-	click_pressed.bg_color = Color("#3a0ca3")
-	click_pressed.border_width_bottom = 0
-	click_pressed.content_margin_top = 8
-	click_button.add_theme_stylebox_override("pressed", click_pressed)
+	# Design the main action buttons with the gorgeous premium prism-heart texture!
+	var click_tex = load("res://assets/prism_heart.jpg")
+	if click_tex:
+		var click_style = StyleBoxTexture.new()
+		click_style.texture = click_tex
+		
+		var click_hover = StyleBoxTexture.new()
+		click_hover.texture = click_tex
+		click_hover.modulate_color = Color(1.15, 1.15, 1.25, 1.0) # Radiant aura hover glow
+		
+		var click_pressed = StyleBoxTexture.new()
+		click_pressed.texture = click_tex
+		click_pressed.modulate_color = Color(0.8, 0.8, 0.9, 1.0) # Snappy feedback compression color
+		
+		click_button.add_theme_stylebox_override("normal", click_style)
+		click_button.add_theme_stylebox_override("hover", click_hover)
+		click_button.add_theme_stylebox_override("pressed", click_pressed)
+		click_button.text = "" # Remove text to let the stunning art shine!
+	else:
+		var click_style = StyleBoxFlat.new()
+		click_style.bg_color = Color("#4361ee")
+		click_style.corner_radius_top_left = 20
+		click_style.corner_radius_top_right = 20
+		click_style.corner_radius_bottom_left = 20
+		click_style.corner_radius_bottom_right = 20
+		click_style.border_width_bottom = 8
+		click_style.border_color = Color("#3a0ca3")
+		click_button.add_theme_stylebox_override("normal", click_style)
+		
+		var click_hover = click_style.duplicate()
+		click_hover.bg_color = Color("#4cc9f0")
+		click_button.add_theme_stylebox_override("hover", click_hover)
+		
+		var click_pressed = click_style.duplicate()
+		click_pressed.bg_color = Color("#3a0ca3")
+		click_pressed.border_width_bottom = 0
+		click_pressed.content_margin_top = 8
+		click_button.add_theme_stylebox_override("pressed", click_pressed)
 	
 	var rebirth_style = click_style.duplicate()
 	rebirth_style.bg_color = Color("#00b4d8")
