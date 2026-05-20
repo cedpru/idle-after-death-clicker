@@ -119,17 +119,24 @@ func _ready():
 		click_pressed.content_margin_top = 8
 		click_button.add_theme_stylebox_override("pressed", click_pressed)
 	
-	var rebirth_style = click_style.duplicate()
+	var rebirth_style = StyleBoxFlat.new()
 	rebirth_style.bg_color = Color("#00b4d8")
+	rebirth_style.corner_radius_top_left = 20
+	rebirth_style.corner_radius_top_right = 20
+	rebirth_style.corner_radius_bottom_left = 20
+	rebirth_style.corner_radius_bottom_right = 20
+	rebirth_style.border_width_bottom = 8
 	rebirth_style.border_color = Color("#0077b6")
 	rebirth_button.add_theme_stylebox_override("normal", rebirth_style)
 	
-	var rebirth_hover = click_hover.duplicate()
+	var rebirth_hover = rebirth_style.duplicate()
 	rebirth_hover.bg_color = Color("#90e0ef")
 	rebirth_button.add_theme_stylebox_override("hover", rebirth_hover)
 	
-	var rebirth_pressed = click_pressed.duplicate()
+	var rebirth_pressed = rebirth_style.duplicate()
 	rebirth_pressed.bg_color = Color("#0077b6")
+	rebirth_pressed.border_width_bottom = 0
+	rebirth_pressed.content_margin_top = 8
 	rebirth_button.add_theme_stylebox_override("pressed", rebirth_pressed)
 	
 	var rebirth_disabled = rebirth_style.duplicate()
